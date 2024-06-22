@@ -5,7 +5,7 @@ services:
     plan: free
     buildCommand: "./bin/render-build.sh"
     # preDeployCommand: "bundle exec rails db:migrate" # preDeployCommand only available on paid instance types
-    startCommand: "bundle exec rails server"
+    startCommand: "bundle exec rails server -e production"
     envVars:
       - key: RAILS_MASTER_KEY
         value: "61240571ceaac4eb297bbf69825a3baa"
