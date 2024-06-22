@@ -8,6 +8,6 @@ services:
     startCommand: "bundle exec rails server"
     envVars:
       - key: RAILS_MASTER_KEY
-        sync: false
+        value: "61240571ceaac4eb297bbf69825a3baa"
       - key: WEB_CONCURRENCY
         value: 2 # sensible default
