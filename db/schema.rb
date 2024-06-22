@@ -42,31 +42,33 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_22_101120) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
-  create_table "data_kandang", force: :cascade do |t|
+  create_table "data_kandangs", force: :cascade do |t|
     t.string "nama_kandang"
     t.integer "kapasitas"
     t.integer "description"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "data_sapi", force: :cascade do |t|
-    t.string "bangsa"
-    t.string "jenis_kelamin"
-    t.string "bobot"
-    t.string "umur"
     t.bigint "user_id", null: false
-    t.bigint "data_kandang_id", null: false
+    t.bigint "data_sapi_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["data_kandang_id"], name: "index_data_sapi_on_data_kandang_id"
-    t.index ["user_id"], name: "index_data_sapi_on_user_id"
+    t.index ["data_sapi_id"], name: "index_data_kandangs_on_data_sapi_id"
+    t.index ["user_id"], name: "index_data_kandangs_on_user_id"
   end
 
   create_table "data_kelistrikan", force: :cascade do |t|
     t.string "data"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "data_sapis", force: :cascade do |t|
+    t.string "bangsa"
+    t.string "jenis_kelamin"
+    t.string "bobot"
+    t.string "umur"
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_data_sapis_on_user_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -82,4 +84,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_22_101120) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "data_kandangs", "data_sapis"
+  add_foreign_key "data_kandangs", "users"
+  add_foreign_key "data_sapis", "users"
 end
