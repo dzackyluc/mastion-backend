@@ -8,9 +8,9 @@ default: &default
   adapter: postgresql
   encoding: unicode
   pool: 5
-  username: dzackylucifer12345
-  password: RKeEGk2n5XuQ
-  host: ep-dry-glitter-a1fh930g.ap-southeast-1.aws.neon.tech
+  username: postgres
+  password: mitsuha15
+  host: localhost
   port: 5432
 
 development:

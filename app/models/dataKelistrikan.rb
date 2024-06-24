@@ -1,0 +1,2 @@
+class DataKelistrikan < ApplicationRecord
+end
