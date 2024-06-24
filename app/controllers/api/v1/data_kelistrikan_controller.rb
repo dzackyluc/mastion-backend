@@ -1,5 +1,5 @@
 module Api::V1
-    class DataKelistrikanController < ApplicationController
+    class DatakelistrikanController < ApplicationController
         skip_before_action :authorized, only: [:create, :update, :all_data_kelistrikan]
         rescue_from ActiveRecord::RecordInvalid, with: :Handle_invalid_record
 
