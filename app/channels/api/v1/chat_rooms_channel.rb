@@ -10,7 +10,8 @@ module Api::V1
     end
   
     def send_message(data)
-      ActionCable.server.broadcast("chat_rooms:#{params[:chat_room_id]}", data)
+      data_with_method = data.merge("method" => "send_message")
+      ActionCable.server.broadcast("chat_rooms:#{params[:chat_room_id]}", data_with_method)
     end
   
     private
