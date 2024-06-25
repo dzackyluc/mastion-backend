@@ -54,7 +54,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_22_101120) do
     t.index ["user_id"], name: "index_data_kandangs_on_user_id"
   end
 
-  create_table "data_kelistrikan", force: :cascade do |t|
+  create_table "data_kelistrikans", force: :cascade do |t|
     t.string "data"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
