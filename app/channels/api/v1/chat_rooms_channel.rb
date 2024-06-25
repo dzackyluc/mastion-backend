@@ -10,7 +10,7 @@ module Api::V1
     end
   
     def send_message(data)
-      ActionCable.server.broadcast("chat_rooms:#{params[:chat_room_id]}", { controls: data })
+      ActionCable.server.broadcast("chat_rooms:#{params[:chat_room_id]}", { controls: data, method: 'send_message' })
     end
   
     private
