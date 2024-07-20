@@ -3,7 +3,7 @@ module Api::V1
       rescue_from 'Exception error', with: :deliver_error_message
     
       def subscribed
-        stream_from "chat_rooms:#{params[:chat_room_id]}"
+        stream_from "mastion_vity_channel:chat_rooms:#{params[:chat_room_id]}"
       end
     
       def unsubscribed
@@ -11,13 +11,13 @@ module Api::V1
     
       def send_message(data)
         data_with_method = data.merge("method" => "send_message")
-        ActionCable.server.broadcast("chat_rooms:#{params[:chat_room_id]}", data_with_method)
+        ActionCable.server.broadcast("mastion_vity_channel:chat_rooms:#{params[:chat_room_id]}", data_with_method)
       end
     
       private
     
       def deliver_error_message
-        ActionCable.server.broadcast("chat_rooms:#{params[:chat_room_id]}", { body: 'An error occurred' })
+        ActionCable.server.broadcast("mastion_vity_channel:chat_rooms:#{params[:chat_room_id]}", { body: 'An error occurred' })
       end
     end
   end
