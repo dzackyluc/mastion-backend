@@ -4,6 +4,7 @@ class User < ApplicationRecord
     has_one_attached :image
 
     has_many :data_kandangs
+    has_many :devices
 
     after_commit :add_default_image, on: [:create]
 
