@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_27_032554) do
+ActiveRecord::Schema[7.1].define(version: 2024_06_18_084208) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -42,42 +42,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_27_032554) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
-  create_table "data_kandangs", force: :cascade do |t|
-    t.string "nama_kandang"
-    t.integer "kapasitas"
-    t.integer "description"
-    t.bigint "user_id", null: false
-    t.bigint "data_sapi_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["data_sapi_id"], name: "index_data_kandangs_on_data_sapi_id"
-    t.index ["user_id"], name: "index_data_kandangs_on_user_id"
-  end
-
-  create_table "data_kelistrikans", force: :cascade do |t|
-    t.string "data"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "data_sapis", force: :cascade do |t|
-    t.string "bangsa"
-    t.string "jenis_kelamin"
-    t.string "bobot"
-    t.string "umur"
-    t.bigint "user_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_data_sapis_on_user_id"
-  end
-
-  create_table "streams", force: :cascade do |t|
-    t.string "stream_key"
-    t.string "stream_url"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "users", force: :cascade do |t|
     t.string "username"
     t.string "email"
@@ -91,7 +55,4 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_27_032554) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
-  add_foreign_key "data_kandangs", "data_sapis"
-  add_foreign_key "data_kandangs", "users"
-  add_foreign_key "data_sapis", "users"
 end

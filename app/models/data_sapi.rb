@@ -1,3 +1,3 @@
 class DataSapi < ApplicationRecord
-    belongs_to :kandang
+    belongs_to :data_kandang
 end

@@ -1,4 +1,4 @@
 class DataKandang < ApplicationRecord
-  has_many :sapi
+  has_many :data_sapis
   belongs_to :user
 end

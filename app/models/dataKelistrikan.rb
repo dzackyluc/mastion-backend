@@ -1,2 +1,0 @@
-class DataKelistrikan < ApplicationRecord
-end

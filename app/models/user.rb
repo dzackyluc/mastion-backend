@@ -3,6 +3,8 @@ class User < ApplicationRecord
 
     has_one_attached :image
 
+    has_many :data_kandangs
+
     after_commit :add_default_image, on: [:create]
 
     validates :username, presence: true, uniqueness: true
