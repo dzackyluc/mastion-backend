@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_06_18_084208) do
+ActiveRecord::Schema[7.1].define(version: 2024_10_09_151823) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -42,6 +42,49 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_18_084208) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "data_kandangs", force: :cascade do |t|
+    t.string "nama_kandang"
+    t.integer "kapasitas"
+    t.text "description"
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_data_kandangs_on_user_id"
+  end
+
+  create_table "data_pemeriksaans", force: :cascade do |t|
+    t.string "suhu"
+    t.string "confidence"
+    t.string "sel_somatik"
+    t.string "device_identifier"
+    t.bigint "data_sapi_id", null: false
+    t.bigint "data_kandang_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["data_kandang_id"], name: "index_data_pemeriksaans_on_data_kandang_id"
+    t.index ["data_sapi_id"], name: "index_data_pemeriksaans_on_data_sapi_id"
+  end
+
+  create_table "data_sapis", force: :cascade do |t|
+    t.string "bangsa"
+    t.string "jenis_kelamin"
+    t.string "bobot"
+    t.string "umur"
+    t.bigint "data_kandang_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["data_kandang_id"], name: "index_data_sapis_on_data_kandang_id"
+  end
+
+  create_table "devices", force: :cascade do |t|
+    t.string "device_identifier"
+    t.string "device_name"
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_devices_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "username"
     t.string "email"
@@ -55,4 +98,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_06_18_084208) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "data_kandangs", "users"
+  add_foreign_key "data_pemeriksaans", "data_kandangs"
+  add_foreign_key "data_pemeriksaans", "data_sapis"
+  add_foreign_key "data_sapis", "data_kandangs"
+  add_foreign_key "devices", "users"
 end

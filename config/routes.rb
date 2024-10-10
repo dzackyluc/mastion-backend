@@ -23,6 +23,20 @@ Rails.application.routes.draw do
       post "sapi" => "data_sapi#create", as: "create_sapi"
       put "sapi/:id" => "data_sapi#update", as: "update_sapi"
       delete "sapi/:id" => "data_sapi#destroy", as: "delete_sapi"
+
+      get "pemeriksaan/:data_sapi_id" => "data_pemeriksaan#data_pemeriksaan_sapi_latest", as: "data_pemeriksaan_sapi_latest"
+      get "pemeriksaan/kandang/:data_kandang_id" => "data_pemeriksaan#data_pemeriksaan_sapi_by_kandang", as: "data_pemeriksaan_sapi_by_kandang"
+      get "pemeriksaan/summary/:data_sapi_id" => "data_pemeriksaan#summary_pemeriksaan", as: "summary_pemeriksaan"
+      get "pemeriksaan/summary/kandang/:data_kandang_id" => "data_pemeriksaan#summary_pemeriksaan_kandang", as: "summary_pemeriksaan_kandang"
+      post "pemeriksaan" => "data_pemeriksaan#create", as: "create_pemeriksaan"
+      put "pemeriksaan/:id" => "data_pemeriksaan#update", as: "update_pemeriksaan"
+      delete "pemeriksaan/:id" => "data_pemeriksaan#destroy", as: "delete_pemeriksaan"
+
+      get "device/:user_id" => "devices#device_user", as: "device_user"
+      get "device/identifier/:device_identifier" => "devices#device_by_identifier", as: "device_by_identifier"
+      post "device" => "devices#create", as: "create_device"
+      put "device/:id" => "devices#update", as: "update_device"
+      delete "device/:id" => "devices#destroy", as: "delete_device"
       
       mount ActionCable.server => "/connect"
     end
