@@ -29,7 +29,11 @@ module Api::V1
 
         def data_sapi_kandang
             @data_sapis = DataSapi.where(data_kandang_id: params[:data_kandang_id])
-            render json: @data_sapis
+            if @data_sapis.empty?
+                render json: { message: 'Data Sapi not found' }, status: :not_found
+            else
+                render json: @data_sapis
+            end
         end
 
         private

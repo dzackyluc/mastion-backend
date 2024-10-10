@@ -1,9 +1,7 @@
 module Api::V1
     class DataPemeriksaanController < ApplicationController
-        def index
-            @data_pemeriksaans = DataPemeriksaan.all
-            render json: @data_pemeriksaans
-        end
+        skip_before_action :authorized
+        before_action :validate_dates, only: [:summary_by_date_kandang, :summary_by_date_sapi]
 
         def show
             @data_pemeriksaan = DataPemeriksaan.find(params[:id])
@@ -33,40 +31,56 @@ module Api::V1
         end
 
         def data_pemeriksaan_sapi_latest
-            @data_pemeriksaan = DataPemeriksaan.where(data_sapi_id: params[:data_sapi_id]).last
-            render json: @data_pemeriksaan
+            @data_pemeriksaans = DataPemeriksaan.where(data_sapi_id: params[:data_sapi_id]).order(created_at: :desc)
+            if @data_pemeriksaans.any?
+            render json: @data_pemeriksaans
+            else
+            render json: { message: 'Data Pemeriksaan not found' }, status: :not_found
+            end
         end
 
         def data_pemeriksaan_sapi_by_kandang
             @data_pemeriksaans = DataPemeriksaan.where(data_kandang_id: params[:data_kandang_id])
-            render json: @data_pemeriksaans
+            if @data_pemeriksaans.count > 0
+                render json: @data_pemeriksaans
+            else
+                render json: { message: 'Data Pemeriksaan not found' }, status: :not_found
+            end
         end
 
-        def summary_pemeriksaan
-            @data_pemeriksaans = DataPemeriksaan.where(data_sapi_id: params[:data_sapi_id])
-            @total_pemeriksaan = @data_pemeriksaans.count
-            @total_pemeriksaan_normal = @data_pemeriksaans.where("confidence >= ?", 0.8).count
-            @total_pemeriksaan_abnormal = @data_pemeriksaans.where("confidence < ?", 0.8).count
-            @total_pemeriksaan_somatik = @data_pemeriksaans.where("sel_somatik > ?", 200.000).count
-            render json: { total_pemeriksaan: @total_pemeriksaan, total_pemeriksaan_normal: @total_pemeriksaan_normal, total_pemeriksaan_abnormal: @total_pemeriksaan_abnormal, total_pemeriksaan_somatik: @total_pemeriksaan_somatik }
+        def summary_by_date_kandang
+            @data_pemeriksaans = DataPemeriksaan.where(data_kandang_id: params[:data_kandang_id]).where("created_at >= ?", params[:start_date]).where("created_at <= ?", params[:end_date])
+            if @data_pemeriksaans.count > 0
+                render json: @data_pemeriksaans
+            else
+                render json: { message: 'Data Pemeriksaan not found' }, status: :not_found
+            end
         end
 
-        def summary_pemeriksaan_kandang
-            @data_pemeriksaans = DataPemeriksaan.where(data_kandang_id: params[:data_kandang_id])
-            @total_pemeriksaan = @data_pemeriksaans.count
-            @total_pemeriksaan_suhu_normal = @data_pemeriksaans.where("suhu >= ?", 35.000).where("suhu <= ?", 39.000).count
-            @total_pemeriksaan_suhu_tinggi = @data_pemeriksaans.where("suhu > ?", 39.000).count
-            @total_pemeriksaan_normal = @data_pemeriksaans.where("confidence >= ?", 0.8).count
-            @total_pemeriksaan_abnormal = @data_pemeriksaans.where("confidence < ?", 0.8).count
-            @total_pemeriksaan_somatik = @data_pemeriksaans.where("sel_somatik > ?", 200.000).count
-            @total_pemeriksaan_sapi = @data_pemeriksaans.select(:data_sapi_id).distinct.count
-            render json: { total_pemeriksaan: @total_pemeriksaan, total_pemeriksaan_suhu_normal: @total_pemeriksaan_suhu_normal, total_pemeriksaan_suhu_tinggi: @total_pemeriksaan_suhu_tinggi, total_pemeriksaan_normal: @total_pemeriksaan_normal, total_pemeriksaan_abnormal: @total_pemeriksaan_abnormal, total_pemeriksaan_somatik: @total_pemeriksaan_somatik, total_pemeriksaan_sapi: @total_pemeriksaan_sapi }
+        def summary_by_date_sapi
+            @data_pemeriksaans = DataPemeriksaan.where(data_sapi_id: params[:data_sapi_id]).where("created_at >= ?", params[:start_date]).where("created_at <= ?", params[:end_date])
+            if @data_pemeriksaans.count > 0
+                render json: @data_pemeriksaans
+            else
+                render json: { message: 'Data Pemeriksaan not found' }, status: :not_found
+            end
         end
 
         private
 
         def data_pemeriksaan_params
             params.permit(:data_sapi_id, :data_kandang_id, :suhu, :confidence, :sel_somatik, :device_identifier)
+        end
+
+        def validate_dates
+            begin
+            start_date = params[:start_date] || params[:date][:start_date]
+            end_date = params[:end_date] || params[:date][:end_date]
+            Date.strptime(params[:start_date], '%Y-%m-%d')
+            Date.strptime(params[:end_date], '%Y-%m-%d')
+            rescue ArgumentError
+            render json: { message: 'Invalid date format. Please use YYYY-MM-DD.' }, status: :bad_request
+            end
         end
     end
 end

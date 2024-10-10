@@ -1,0 +1,799 @@
+---
+openapi: 3.0.1
+info:
+  title: API V1
+  version: v1
+paths:
+  "/api/v1/login":
+    post:
+      summary: Logs in a user
+      tags:
+      - Authentication
+      parameters: []
+      responses:
+        '202':
+          description: user logged in
+        '401':
+          description: Invalid username or password
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+              required:
+              - username
+              - password
+  "/api/v1/register":
+    post:
+      summary: Registers a new user
+      tags:
+      - Authentication
+      parameters: []
+      responses:
+        '201':
+          description: user created
+        '422':
+          description: invalid request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                email:
+                  type: string
+                phone_number:
+                  type: string
+                password:
+                  type: string
+              required:
+              - username
+              - email
+              - phone_number
+              - password
+  "/api/v1/me":
+    get:
+      summary: Gets current user
+      tags:
+      - Authentication
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: current user
+  "/api/v1/users/{id}":
+    put:
+      summary: Updates a user
+      tags:
+      - Users
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: user updated
+        '404':
+          description: user not found
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                email:
+                  type: string
+                bio:
+                  type: string
+                phone_number:
+                  type: string
+                image:
+                  type: string
+              required:
+              - username
+              - email
+    delete:
+      summary: Deletes a user
+      tags:
+      - Users
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: user deleted
+        '404':
+          description: user not found
+  "/api/v1/kandang/{user_id}":
+    get:
+      summary: Retrieves all kandangs for a user
+      tags:
+      - Data Kandang
+      parameters:
+      - name: user_id
+        in: path
+        description: User ID
+        required: true
+        schema:
+          type: string
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: kandangs found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    nama_kandang:
+                      type: string
+                    kapasitas:
+                      type: integer
+                    description:
+                      type: string
+                    user_id:
+                      type: integer
+                  required:
+                  - id
+                  - nama_kandang
+                  - kapasitas
+                  - description
+                  - user_id
+        '404':
+          description: kandangs not found
+  "/api/v1/kandang":
+    post:
+      summary: Creates a kandang
+      tags:
+      - Data Kandang
+      parameters: []
+      security:
+      - bearer_auth: []
+      responses:
+        '201':
+          description: kandang created
+        '422':
+          description: invalid request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nama_kandang:
+                  type: string
+                kapasitas:
+                  type: integer
+                description:
+                  type: string
+                user_id:
+                  type: integer
+              required:
+              - nama_kandang
+              - kapasitas
+              - description
+              - user_id
+  "/api/v1/kandang/{id}":
+    put:
+      summary: Updates a kandang
+      tags:
+      - Data Kandang
+      parameters:
+      - name: id
+        in: path
+        description: Kandang ID
+        required: true
+        schema:
+          type: string
+      security:
+      - bearer_auth: []
+      responses:
+        '202':
+          description: kandang updated
+        '404':
+          description: kandang not found
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                nama_kandang:
+                  type: string
+                kapasitas:
+                  type: integer
+                description:
+                  type: string
+                user_id:
+                  type: integer
+              required:
+              - nama_kandang
+              - kapasitas
+              - description
+              - user_id
+    delete:
+      summary: Deletes a kandang
+      tags:
+      - Data Kandang
+      parameters:
+      - name: id
+        in: path
+        description: Kandang ID
+        required: true
+        schema:
+          type: string
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: kandang deleted
+        '404':
+          description: kandang not found
+  "/api/v1/pemeriksaan":
+    post:
+      summary: Creates a Data Pemeriksaan
+      tags:
+      - Data Pemeriksaan
+      parameters: []
+      responses:
+        '201':
+          description: data pemeriksaan created
+        '422':
+          description: invalid request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data_sapi_id:
+                  type: integer
+                data_kandang_id:
+                  type: integer
+                suhu:
+                  type: string
+                confidence:
+                  type: string
+                sel_somatik:
+                  type: string
+                device_identifier:
+                  type: string
+              required:
+              - data_sapi_id
+              - data_kandang_id
+              - suhu
+              - confidence
+              - sel_somatik
+              - device_identifier
+  "/api/v1/pemeriksaan/{id}":
+    put:
+      summary: Updates a Data Pemeriksaan
+      tags:
+      - Data Pemeriksaan
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '202':
+          description: data pemeriksaan updated
+        '404':
+          description: data pemeriksaan not found
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                data_sapi_id:
+                  type: integer
+                data_kandang_id:
+                  type: integer
+                suhu:
+                  type: string
+                confidence:
+                  type: string
+                sel_somatik:
+                  type: string
+                device_identifier:
+                  type: string
+              required:
+              - data_sapi_id
+              - data_kandang_id
+              - suhu
+              - confidence
+              - sel_somatik
+              - device_identifier
+    delete:
+      summary: Deletes a Data Pemeriksaan
+      tags:
+      - Data Pemeriksaan
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: data pemeriksaan deleted
+        '404':
+          description: data pemeriksaan not found
+  "/api/v1/pemeriksaan/{data_sapi_id}":
+    get:
+      summary: Retrieves all Data Pemeriksaan for a specific Sapi
+      tags:
+      - Data Pemeriksaan
+      parameters:
+      - name: data_sapi_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: data pemeriksaan found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    data_sapi_id:
+                      type: integer
+                    data_kandang_id:
+                      type: integer
+                    suhu:
+                      type: string
+                    confidence:
+                      type: string
+                    sel_somatik:
+                      type: string
+                    device_identifier:
+                      type: string
+                  required:
+                  - id
+                  - data_sapi_id
+                  - data_kandang_id
+                  - suhu
+                  - confidence
+                  - sel_somatik
+                  - device_identifier
+        '404':
+          description: data pemeriksaan not found
+  "/api/v1/pemeriksaan/kandang/{data_kandang_id}":
+    get:
+      summary: Retrieves all Data Pemeriksaan for a specific Kandang
+      tags:
+      - Data Pemeriksaan
+      parameters:
+      - name: data_kandang_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: data pemeriksaan found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    data_sapi_id:
+                      type: integer
+                    data_kandang_id:
+                      type: integer
+                    suhu:
+                      type: string
+                    confidence:
+                      type: string
+                    sel_somatik:
+                      type: string
+                    device_identifier:
+                      type: string
+                  required:
+                  - id
+                  - data_sapi_id
+                  - data_kandang_id
+                  - suhu
+                  - confidence
+                  - sel_somatik
+                  - device_identifier
+        '404':
+          description: data pemeriksaan not found
+  "/api/v1/pemeriksaan/summary/kandang/{data_kandang_id}":
+    get:
+      summary: Retrieves summary of Data Pemeriksaan for a specific Kandang and date
+        range
+      tags:
+      - Data Pemeriksaan
+      parameters:
+      - name: data_kandang_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: start_date
+        in: query
+        schema:
+          type: string
+      - name: end_date
+        in: query
+        schema:
+          type: string
+      responses:
+        '200':
+          description: data pemeriksaan summary found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    data_sapi_id:
+                      type: integer
+                    data_kandang_id:
+                      type: integer
+                    suhu:
+                      type: string
+                    confidence:
+                      type: string
+                    sel_somatik:
+                      type: string
+                    device_identifier:
+                      type: string
+                  required:
+                  - data_sapi_id
+                  - data_kandang_id
+                  - suhu
+                  - confidence
+                  - sel_somatik
+                  - device_identifier
+        '404':
+          description: data pemeriksaan summary not found
+        '400':
+          description: invalid date format
+  "/api/v1/pemeriksaan/summary/sapi/{data_sapi_id}":
+    get:
+      summary: Retrieves summary of Data Pemeriksaan for a specific Sapi and date
+        range
+      tags:
+      - Data Pemeriksaan
+      parameters:
+      - name: data_sapi_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      - name: start_date
+        in: query
+        schema:
+          type: string
+      - name: end_date
+        in: query
+        schema:
+          type: string
+      responses:
+        '200':
+          description: data pemeriksaan summary found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    data_sapi_id:
+                      type: integer
+                    data_kandang_id:
+                      type: integer
+                    suhu:
+                      type: string
+                    confidence:
+                      type: string
+                    sel_somatik:
+                      type: string
+                    device_identifier:
+                      type: string
+                  required:
+                  - data_sapi_id
+                  - data_kandang_id
+                  - suhu
+                  - confidence
+                  - sel_somatik
+                  - device_identifier
+        '404':
+          description: data pemeriksaan summary not found
+        '400':
+          description: invalid date format
+  "/api/v1/sapi":
+    post:
+      summary: Creates Data Sapi
+      tags:
+      - Data Sapi
+      parameters: []
+      responses:
+        '201':
+          description: data sapi created
+        '422':
+          description: invalid request
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                bangsa:
+                  type: string
+                bobot:
+                  type: string
+                data_kandang_id:
+                  type: integer
+              required:
+              - bangsa
+              - bobot
+              - data_kandang_id
+  "/api/v1/sapi/{id}":
+    put:
+      summary: Updates Data Sapi
+      tags:
+      - Data Sapi
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '202':
+          description: data sapi updated
+        '404':
+          description: data sapi not found
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                bangsa:
+                  type: string
+                bobot:
+                  type: string
+                data_kandang_id:
+                  type: integer
+              required:
+              - bangsa
+              - bobot
+              - data_kandang_id
+    delete:
+      summary: Deletes Data Sapi
+      tags:
+      - Data Sapi
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: data sapi deleted
+        '404':
+          description: data sapi not found
+  "/api/v1/sapi/{data_kandang_id}":
+    get:
+      summary: Retrieves Data Sapi by Kandang
+      tags:
+      - Data Sapi
+      parameters:
+      - name: data_kandang_id
+        in: path
+        required: true
+        schema:
+          type: string
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: data sapi found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    bangsa:
+                      type: string
+                    bobot:
+                      type: string
+                    data_kandang_id:
+                      type: integer
+                  required:
+                  - id
+                  - bangsa
+                  - bobot
+                  - data_kandang_id
+        '404':
+          description: data sapi not found
+  "/api/v1/device":
+    post:
+      summary: Creates a device
+      tags:
+      - Devices
+      parameters: []
+      responses:
+        '201':
+          description: device created
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                device_name:
+                  type: string
+                device_identifier:
+                  type: string
+                user_id:
+                  type: integer
+              required:
+              - device_name
+              - device_identifier
+              - user_id
+  "/api/v1/device/{id}":
+    put:
+      summary: Updates a device
+      tags:
+      - Devices
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '202':
+          description: device updated
+        '404':
+          description: device not found
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                device_name:
+                  type: string
+                device_identifier:
+                  type: string
+                user_id:
+                  type: integer
+              required:
+              - device_name
+              - device_identifier
+              - user_id
+    delete:
+      summary: Deletes a device
+      tags:
+      - Devices
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: device deleted
+        '404':
+          description: device not found
+  "/api/v1/device/{user_id}":
+    get:
+      summary: Retrieves devices by user
+      tags:
+      - Devices
+      parameters:
+      - name: user_id
+        in: path
+        required: true
+        schema:
+          type: integer
+      responses:
+        '200':
+          description: devices found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    device_name:
+                      type: string
+                    device_identifier:
+                      type: string
+                    user_id:
+                      type: integer
+                  required:
+                  - id
+                  - device_name
+                  - device_identifier
+                  - user_id
+        '404':
+          description: devices not found
+  "/api/v1/device/identifier/{device_identifier}":
+    get:
+      summary: Retrieves devices by identifier
+      tags:
+      - Devices
+      parameters:
+      - name: device_identifier
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: devices found
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    device_name:
+                      type: string
+                    device_identifier:
+                      type: string
+                    user_id:
+                      type: integer
+                  required:
+                  - id
+                  - device_name
+                  - device_identifier
+                  - user_id
+        '404':
+          description: devices not found
+servers:
+- url: https://{defaultHost}
+  variables:
+    defaultHost:
+      default: www.example.com

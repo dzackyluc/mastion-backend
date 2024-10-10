@@ -30,7 +30,11 @@ module Api::V1
 
         def data_kandang_user
             @data_kandangs = DataKandang.where(user_id: params[:user_id])
-            render json: @data_kandangs
+            if @data_kandangs.empty?
+                render json: { message: 'Data Kandang not found' }, status: :not_found
+            else
+                render json: @data_kandangs
+            end
         end
 
         private

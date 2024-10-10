@@ -1,5 +1,7 @@
 module Api::V1
     class DevicesController < ApplicationController
+        skip_before_action :authorized
+
         def index
             @devices = Device.all
             render json: @devices
@@ -29,12 +31,20 @@ module Api::V1
 
         def device_user
             @devices = Device.where(user_id: params[:user_id])
-            render json: @devices
+            if @devices.empty?
+                render json: { message: 'Devices not found' }, status: :not_found
+            else
+                render json: @devices
+            end     
         end
 
         def device_by_identifier
             @devices = Device.where(device_identifier: params[:device_identifier])
-            render json: @devices
+            if @devices.empty?
+                render json: { message: 'Devices not found' }, status: :not_found
+            else
+                render json: @devices
+            end
         end
 
         private

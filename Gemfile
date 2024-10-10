@@ -44,6 +44,15 @@ gem "jwt"
 # use active model serializers for json serialization
 gem "active_model_serializers"
 
+# use swagger for api documentation
+gem "rswag"
+
+# use rspec for testing
+gem "rspec-rails"
+
+# use timecop for manipulating time
+gem "timecop"
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ]

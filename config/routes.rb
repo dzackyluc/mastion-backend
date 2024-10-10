@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  mount Rswag::Ui::Engine => '/api-docs'
+  mount Rswag::Api::Engine => '/api-docs'
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
@@ -8,7 +10,6 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       get "me", to: "users#me", as: "me"
-      get "users" => "users#all_users", as: "users"
       post "login" => "auth#login", as: "login"
       post "register" => "users#create", as: "register"
       put "users/:id" => "users#update", as: "update_user"
@@ -26,8 +27,8 @@ Rails.application.routes.draw do
 
       get "pemeriksaan/:data_sapi_id" => "data_pemeriksaan#data_pemeriksaan_sapi_latest", as: "data_pemeriksaan_sapi_latest"
       get "pemeriksaan/kandang/:data_kandang_id" => "data_pemeriksaan#data_pemeriksaan_sapi_by_kandang", as: "data_pemeriksaan_sapi_by_kandang"
-      get "pemeriksaan/summary/:data_sapi_id" => "data_pemeriksaan#summary_pemeriksaan", as: "summary_pemeriksaan"
-      get "pemeriksaan/summary/kandang/:data_kandang_id" => "data_pemeriksaan#summary_pemeriksaan_kandang", as: "summary_pemeriksaan_kandang"
+      get "pemeriksaan/summary/kandang/:data_kandang_id" => "data_pemeriksaan#summary_by_date_kandang", as: "summary_by_date_kandang"
+      get "pemeriksaan/summary/sapi/:data_sapi_id" => "data_pemeriksaan#summary_by_date_sapi", as: "summary_by_date_sapi"
       post "pemeriksaan" => "data_pemeriksaan#create", as: "create_pemeriksaan"
       put "pemeriksaan/:id" => "data_pemeriksaan#update", as: "update_pemeriksaan"
       delete "pemeriksaan/:id" => "data_pemeriksaan#destroy", as: "delete_pemeriksaan"

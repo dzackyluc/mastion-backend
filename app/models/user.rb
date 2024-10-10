@@ -3,8 +3,8 @@ class User < ApplicationRecord
 
     has_one_attached :image
 
-    has_many :data_kandangs :dependent => :destroy
-    has_many :devices :dependent => :destroy
+    has_many :data_kandangs, dependent: :destroy
+    has_many :devices, dependent: :destroy
 
     after_commit :add_default_image, on: [:create]
 
